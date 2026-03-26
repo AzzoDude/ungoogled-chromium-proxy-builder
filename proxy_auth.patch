@@ -1,0 +1,40 @@
+--- a/net/http/http_auth_controller.cc
++++ b/net/http/http_auth_controller.cc
+@@ -4,6 +4,9 @@
+ 
+ #include "net/http/http_auth_controller.h"
+ 
++#include "base/command_line.h"
++#include "base/strings/string_split.h"
++#include "base/strings/utf_string_conversions.h"
+ #include "base/bind.h"
+ #include "base/callback_helpers.h"
+ #include "base/check_op.h"
+@@ -102,6 +105,27 @@
+   if (auth_url_.has_username())
+     return false;
+ 
++  // CUSTOM PROXY AUTH LOGIC: Check command line for --proxy-auth=user:pass
++  base::CommandLine* command_line = base::CommandLine::ForCurrentProcess();
++  if (target_ == HttpAuth::AUTH_PROXY && command_line->HasSwitch("proxy-auth")) {
++    std::string auth_str = command_line->GetSwitchValueASCII("proxy-auth");
++    size_t colon_pos = auth_str.find(':');
++    if (colon_pos != std::string::npos) {
++      std::string user = auth_str.substr(0, colon_pos);
++      std::string pass = auth_str.substr(colon_pos + 1);
++      
++      identity_.source = HttpAuth::IDENT_SRC_CONFIG;
++      identity_.invalid = false;
++      identity_.credentials = AuthCredentials(
++          base::UTF8ToUTF16(user), 
++          base::UTF8ToUTF16(pass));
++      
++      // Clear handler to force the new credentials
++      handler_.reset(); 
++      return true;
++    }
++  }
++
+   HttpAuthCache::Entry* entry = http_auth_cache_->LookupByPath(
+       auth_scheme_host_port_, target_, network_anonymization_key_, auth_path_);
+   if (!entry)
