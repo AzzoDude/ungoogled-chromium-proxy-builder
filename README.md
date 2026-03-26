@@ -100,6 +100,3 @@ chrome.exe --proxy-server="1.2.3.4:8080" --proxy-auth="username:password" --user
 | `--user-data-dir` | Keeps cookies/cache separate for this instance. |
 
 ---
-
-> [!CAUTION]
-> This build is intended for automation and research purposes. Ensure you comply with the terms of service of the websites you interact with.
