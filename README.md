@@ -4,8 +4,6 @@
 This repository provides a production-ready patch for **Ungoogled Chromium** that enables native proxy authentication via command-line arguments. This is the core engine for building multi-instance browser managers (like GenLogin).
 ## 🚀 Why This Project?
 Standard Chromium ignores `user:pass` in the `--proxy-server` flag. This patch bypasses that restriction using a custom `--proxy-auth` switch, allowing for 100% automated proxy logins without popups.
-![Proxy Auth Success](https://media1.tenor.com/m/YoXbTafSNh0AAAAC/gumball-dumb.gif)
-*Me watching 50 instances connect to proxies without a single "Sign In" popup.*
 ---
 ## 🛠️ Build Instructions (Step-by-Step)
 ### 1. Prerequisites
